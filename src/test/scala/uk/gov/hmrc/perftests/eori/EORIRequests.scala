@@ -23,7 +23,7 @@ import uk.gov.hmrc.perftests.eori.Requests._
 trait EORIRequests {
   self: PerformanceTestRunner with ServicesConfiguration =>
 
-  private val baseUrl: String = baseUrlFor("ars-frontend")
+  private val baseUrl: String = baseUrlFor("customs-update-eori-admin-frontend")
 
   val payload = Map(
     "usersGivenName" -> "",
