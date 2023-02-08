@@ -23,24 +23,32 @@ import uk.gov.hmrc.perftests.eori.Requests._
 trait EORIRequests {
   self: PerformanceTestRunner with ServicesConfiguration =>
 
-  private val baseUrl: String = baseUrlFor("customs-update-eori-admin-frontend")
+   val baseUrl: String = baseUrlFor("eori-frontend")
+
 
   val payload = Map(
-    "usersGivenName" -> "",
-    "pid" -> "12345",
-    "status" -> "true",
-    "usersSurname" -> "",
-    "emailAddress" -> "",
-    "roles" -> "update-enrolment-eori",
-  "signature" -> "valid",
+  "pid"->"GB123456123456",
+  //  "usersGivenName"->"",
+//    "usersSurname"->"",
+//  "emailAddress"->"",
+//    "status"->"true",
+//  "signature"-> "valid",
+  "roles"->"update-enrolment-eori"
   )
 
   setup("initial-journey", "test ") withRequests(
-    getPage("Login Page", true, s"$baseUrl/customs-update-eori-admin-frontend"),
-    getPage("Enter PID and Roles", true, s"$baseUrl/customs-update-eori-admin-frontend/stride-idp-stub/sign-in"),
-    postPage("Enter PID and Roles", s"$baseUrl/customs-update-eori-admin-frontend", s"$baseUrl/customs-update-eori-admin-frontend", payload),
-    // getPage("About the goods", true,s"$baseUrl/advance-valuation-ruling/importGoods")
+    getPage("eori home",true, s"$baseUrl/customs-update-eori-admin-frontend"),
+//    getPage("starter checklist",true, s"$baseUrl/advance-valuation-ruling/requiredInformation?csrfToken="+"${csrfToken}"),
+    postPage("Enter PID and Roles",s"$baseUrl/customs-update-eori-admin-frontend", s"$baseUrl/customs-update-eori-admin-frontend/update/", payload),
+   getPage("EORI Update page", true,s"$baseUrl/customs-update-eori-admin-frontend/update/")
 
-  )
+    )
+  setup(" eori-api", "verify a Performance  test on Staging ")
+    .withRequests(
+    getPage("Staging",s"$baseUrl/auth-login-stub/gg-sign-in?continue=%2Fcustoms-update-eori-admin-frontend%2FaccountHome")
+
+
+
+    )
 
 }
