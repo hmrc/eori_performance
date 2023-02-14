@@ -30,32 +30,14 @@ object EORIRequests extends ServicesConfiguration {
   val strideAuthResponse : String = baseUrlFor("stride-auth")
 
   def redirectWithoutStrideSession: HttpRequestBuilder = {
-<<<<<<< HEAD
     http("Navigate to Stride Login")
       .get("https://admin.staging.tax.service.gov.uk/customs-update-eori-admin-frontend")
-=======
-<<<<<<< HEAD
-    http("Navigate to Stride Login")
-=======
-    http("Navigate to internal service and redirect to Stride Login")
-      // .get("https://admin.staging.tax.service.gov.uk/customs-exports-internal/choice")
->>>>>>> main
-          .get("https://admin.staging.tax.service.gov.uk/customs-update-eori-admin-frontend")
->>>>>>> main
       .check(status.is(303))
       .check(header(Location).saveAs("strideLoginRedirect"))
   }
 
   def getStrideLoginRedirect: HttpRequestBuilder = {
-<<<<<<< HEAD
     http("get Stride login redirect")
-=======
-<<<<<<< HEAD
-    http("get Stride login redirect")
-=======
-    http("get stride login redirect")
->>>>>>> main
->>>>>>> main
       .get(s"https://admin.staging.tax.service.gov.uk$${strideLoginRedirect}")
       .check(status.is(303))
       .check(header(Location).saveAs("strideStubRedirect"))
@@ -63,15 +45,7 @@ object EORIRequests extends ServicesConfiguration {
   }
 
   def getStrideIdpStubPage: HttpRequestBuilder = {
-<<<<<<< HEAD
     http("get Stride IDP page")
-=======
-<<<<<<< HEAD
-    http("get Stride IDP page")
-=======
-    http("get stride IDP page")
->>>>>>> main
->>>>>>> main
       .get("${strideStubRedirect}")
       .check(status.is(200))
       .check(saveRelayState)
@@ -81,83 +55,34 @@ object EORIRequests extends ServicesConfiguration {
     http("post Stride login stub")
      .post(s"${strideAuthLogin}"+"/stride-idp-stub/sign-in")
       .formParam("RelayState", "${strideRelayState}")
-<<<<<<< HEAD
       .formParam("pid", "${EORI}")
-=======
-<<<<<<< HEAD
-      .formParam("pid", "${EORI}")
-=======
-      .formParam("pid", "${PID}")
->>>>>>> main
->>>>>>> main
       .formParam("usersGivenName", "")
       .formParam("usersSurname", "")
       .formParam("emailAddress", "")
       .formParam("status", "true")
       .formParam("signature", "valid")
-<<<<<<< HEAD
       .formParam("roles", "${ROLES}")
-=======
-<<<<<<< HEAD
-      .formParam("roles", "${ROLES}")
-=======
-      .formParam("roles", "update-enrolment-eori")
->>>>>>> main
->>>>>>> main
       .check(status.is(303))
       .check(header(Location).saveAs("authResponse"))
   }
 
   def getStrideAuthResponseRedirect: HttpRequestBuilder = {
-<<<<<<< HEAD
     http("get Stride auth response")
-=======
-<<<<<<< HEAD
-    http("get Stride auth response")
-=======
-    http("get stride auth response redirect")
->>>>>>> main
->>>>>>> main
       .get(s"${strideAuthLogin}"+"${authResponse}")
       .check(status.is(200))
       .check(saveSAMLResponse)
   }
 
   def postSAMLResponseToStrideLogin: HttpRequestBuilder = {
-<<<<<<< HEAD
     http("Post SAMLResponse to eori service")
-=======
-<<<<<<< HEAD
-    http("Post SAMLResponse to eori service")
-=======
-    http("Post SAMLResponse to Stride Login and redirect to eori service")
->>>>>>> main
->>>>>>> main
       .post(s"$strideAuthResponse/stride/auth-response")
       .formParam("SAMLResponse", "${samlResponse}")
       .formParam("RelayState", "${strideRelayState}")
       .check(status.is(303))
-<<<<<<< HEAD
       .check((header(Location)).is("/customs-update-eori-admin-frontend"))
   }
 
 //Update Journey
-=======
-<<<<<<< HEAD
-=======
-      //.check(header(Location).is("/customs-exports-internal/choice"))
->>>>>>> main
-      .check((header(Location)).is("/customs-update-eori-admin-frontend"))
-  }
-
-
-
-<<<<<<< HEAD
-//Update Journey
-=======
-
->>>>>>> main
->>>>>>> main
 
   def getSelectUpdateOption: HttpRequestBuilder = {
     http("get stride auth response redirect")
@@ -175,10 +100,6 @@ object EORIRequests extends ServicesConfiguration {
       .check(status.is(303))
       .check(header(Location).is("/customs-update-eori-admin-frontend/update"))
   }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> main
   def getEnterUpdatDetails: HttpRequestBuilder = {
     http("get Update details response")
       .get(s"$baseUrl/customs-update-eori-admin-frontend/update")
@@ -217,23 +138,10 @@ object EORIRequests extends ServicesConfiguration {
   }
 
 //Cancel Journey
-<<<<<<< HEAD
 
   def getSelectCancelOption: HttpRequestBuilder = {
     http("get Choose Journey type as Cancel")
       .get(s"$baseUrl/customs-update-eori-admin-frontend")
-=======
-
-  def getSelectCancelOption: HttpRequestBuilder = {
-    http("get Choose Journey type as Cancel")
-      .get(s"$baseUrl/customs-update-eori-admin-frontend")
-=======
-
-  def getSelectCancelOption: HttpRequestBuilder = {
-    http("get Choose Journey type as Cancel")
-      .get(s"$baseUrl/customs-update-eori-admin-frontend/update")
->>>>>>> main
->>>>>>> main
       .check(status.is(200))
       .check(saveCsrfToken)
       .check(regex("Replace an existing EORI number").exists)
@@ -256,18 +164,6 @@ object EORIRequests extends ServicesConfiguration {
       .check(regex("Cancel a company’s subscriptions to HMRC services").exists)
   }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-  def getEnterCancelDetails: HttpRequestBuilder = {
-    http("get Enter details for Cancel")
-      .get(s"$baseUrl/customs-update-eori-admin-frontend/cancel")
-      .check(status.is(200))
-      .check(saveCsrfToken)
-      .check(regex("Cancel a company’s subscriptions to HMRC services").exists)
-  }
-
->>>>>>> main
   def postEnterCancelDetails: HttpRequestBuilder = {
     http("post Enter details for Cancel")
       .post(s"$baseUrl/customs-update-eori-admin-frontend/cancel")
@@ -286,26 +182,6 @@ object EORIRequests extends ServicesConfiguration {
       .check(saveCsrfToken)
       .check(regex("Are you sure you want to cancel ${EORI}").exists)
   }
-<<<<<<< HEAD
-=======
-
-  def postConfirmCancel: HttpRequestBuilder = {
-    http("post Confirm for Cancel")
-      .post(s"$baseUrl/customs-update-eori-admin-frontend/confirm-cancel?existingEori=$${EORI}&establishmentDate=$${EDAY}%2F$${EMONTH}%2F$${EYEAR}")
-      .formParam("csrfToken", "${csrfToken}")
-      .formParam("confirm","true")
-      .check(status.is(303))
-      .check(header(Location).is("/customs-update-eori-admin-frontend/cancel"))
-  }
-  def getCancelConfirmValidation: HttpRequestBuilder = {
-    http("get Confirm for Cancel")
-      .get(s"$baseUrl/customs-update-eori-admin-frontend/success?cancelOrUpdate=Cancel-Eori&oldEoriNumber=$${EORI}&cancelledEnrolments=HMRC-ATAR-ORG%2CHMRC-GVMS-ORG")
-      .check(status.is(200))
-      .check(saveCsrfToken)
-      .check(regex("Subscriptions cancelled for ${EORI}").exists)
-  }
-=======
->>>>>>> main
 
   def postConfirmCancel: HttpRequestBuilder = {
     http("post Confirm for Cancel")
@@ -334,18 +210,4 @@ object EORIRequests extends ServicesConfiguration {
       //.check(header(Location).is("/customs-exports-internal/choice"))
       .check((header(Location)).is("/customs-update-eori-admin-frontend"))
   }
-<<<<<<< HEAD
-=======
-//
-//  def postCancelJourney: HttpRequestBuilder = {
-//    http("Post SAMLResponse to Stride Login and redirect to internal service")
-//      .post(s"$strideAuthResponse/stride/auth-response")
-//      .formParam("SAMLResponse", "${samlResponse}")
-//      .formParam("RelayState", "${strideRelayState}")
-//      .check(status.is(303))
-//      //.check(header(Location).is("/customs-exports-internal/choice"))
-//      .check((header(Location)).is("/customs-update-eori-admin-frontend"))
-//  }
->>>>>>> main
->>>>>>> main
 }
