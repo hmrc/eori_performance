@@ -30,15 +30,23 @@ object EORIRequests extends ServicesConfiguration {
   val strideAuthResponse : String = baseUrlFor("stride-auth")
 
   def redirectWithoutStrideSession: HttpRequestBuilder = {
+<<<<<<< HEAD
+    http("Navigate to Stride Login")
+=======
     http("Navigate to internal service and redirect to Stride Login")
       // .get("https://admin.staging.tax.service.gov.uk/customs-exports-internal/choice")
+>>>>>>> main
           .get("https://admin.staging.tax.service.gov.uk/customs-update-eori-admin-frontend")
       .check(status.is(303))
       .check(header(Location).saveAs("strideLoginRedirect"))
   }
 
   def getStrideLoginRedirect: HttpRequestBuilder = {
+<<<<<<< HEAD
+    http("get Stride login redirect")
+=======
     http("get stride login redirect")
+>>>>>>> main
       .get(s"https://admin.staging.tax.service.gov.uk$${strideLoginRedirect}")
       .check(status.is(303))
       .check(header(Location).saveAs("strideStubRedirect"))
@@ -46,7 +54,11 @@ object EORIRequests extends ServicesConfiguration {
   }
 
   def getStrideIdpStubPage: HttpRequestBuilder = {
+<<<<<<< HEAD
+    http("get Stride IDP page")
+=======
     http("get stride IDP page")
+>>>>>>> main
       .get("${strideStubRedirect}")
       .check(status.is(200))
       .check(saveRelayState)
@@ -56,37 +68,60 @@ object EORIRequests extends ServicesConfiguration {
     http("post Stride login stub")
      .post(s"${strideAuthLogin}"+"/stride-idp-stub/sign-in")
       .formParam("RelayState", "${strideRelayState}")
+<<<<<<< HEAD
+      .formParam("pid", "${EORI}")
+=======
       .formParam("pid", "${PID}")
+>>>>>>> main
       .formParam("usersGivenName", "")
       .formParam("usersSurname", "")
       .formParam("emailAddress", "")
       .formParam("status", "true")
       .formParam("signature", "valid")
+<<<<<<< HEAD
+      .formParam("roles", "${ROLES}")
+=======
       .formParam("roles", "update-enrolment-eori")
+>>>>>>> main
       .check(status.is(303))
       .check(header(Location).saveAs("authResponse"))
   }
 
   def getStrideAuthResponseRedirect: HttpRequestBuilder = {
+<<<<<<< HEAD
+    http("get Stride auth response")
+=======
     http("get stride auth response redirect")
+>>>>>>> main
       .get(s"${strideAuthLogin}"+"${authResponse}")
       .check(status.is(200))
       .check(saveSAMLResponse)
   }
 
   def postSAMLResponseToStrideLogin: HttpRequestBuilder = {
+<<<<<<< HEAD
+    http("Post SAMLResponse to eori service")
+=======
     http("Post SAMLResponse to Stride Login and redirect to eori service")
+>>>>>>> main
       .post(s"$strideAuthResponse/stride/auth-response")
       .formParam("SAMLResponse", "${samlResponse}")
       .formParam("RelayState", "${strideRelayState}")
       .check(status.is(303))
+<<<<<<< HEAD
+=======
       //.check(header(Location).is("/customs-exports-internal/choice"))
+>>>>>>> main
       .check((header(Location)).is("/customs-update-eori-admin-frontend"))
   }
 
 
 
+<<<<<<< HEAD
+//Update Journey
+=======
 
+>>>>>>> main
 
   def getSelectUpdateOption: HttpRequestBuilder = {
     http("get stride auth response redirect")
@@ -104,10 +139,55 @@ object EORIRequests extends ServicesConfiguration {
       .check(status.is(303))
       .check(header(Location).is("/customs-update-eori-admin-frontend/update"))
   }
+<<<<<<< HEAD
+  def getEnterUpdatDetails: HttpRequestBuilder = {
+    http("get Update details response")
+      .get(s"$baseUrl/customs-update-eori-admin-frontend/update")
+      .check(status.is(200))
+      .check(saveCsrfToken)
+      .check(regex("Replace an existing EORI number").exists)
+  }
+
+  def postEnterUpdatDetails: HttpRequestBuilder = {
+    http("post Enter EORI Details for Update")
+      .post(s"$baseUrl/customs-update-eori-admin-frontend/update")
+       .formParam("csrfToken", "${csrfToken}")
+      .formParam("existing-eori","${EORI}")
+      .formParam("date-of-establishment.day","${EDAY}")
+        .formParam("date-of-establishment.month","${EMONTH}")
+        .formParam("date-of-establishment.year","${EYEAR}")
+        .formParam("new-eori","${NEWEORI}")
+      .check(status.is(303))
+      .check(header(Location).is("/customs-update-eori-admin-frontend/confirm-update?oldEoriNumber=${EORI}&establishmentDate=${EDAY}%2F${EMONTH}%2F${EYEAR}&newEoriNumber=${NEWEORI}"))
+  }
+  def getConfirmUpdate: HttpRequestBuilder = {
+    http("get Confirm for update")
+      .get(s"$baseUrl/customs-update-eori-admin-frontend/confirm-update?oldEoriNumber=$${EORI}&establishmentDate=$${EDAY}%2F$${EMONTH}%2F$${EYEAR}&newEoriNumber=$${NEWEORI}")
+      .check(status.is(200))
+      .check(saveCsrfToken)
+      .check(regex("Are you sure you want to replace the current EORI number with ${NEWEORI}").exists)
+  }
+
+  def postConfirmUpdate: HttpRequestBuilder = {
+    http("post Confirm for update")
+      .post(s"$baseUrl/customs-update-eori-admin-frontend/confirm-update?oldEoriNumber=$${EORI}&establishmentDate=$${EDAY}%2F$${EMONTH}%2F$${EYEAR}&newEoriNumber=$${NEWEORI}")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("confirm","true")
+      .check(status.is(303))
+      .check(header(Location).is("/customs-update-eori-admin-frontend/update"))
+  }
+
+//Cancel Journey
+
+  def getSelectCancelOption: HttpRequestBuilder = {
+    http("get Choose Journey type as Cancel")
+      .get(s"$baseUrl/customs-update-eori-admin-frontend")
+=======
 
   def getSelectCancelOption: HttpRequestBuilder = {
     http("get Choose Journey type as Cancel")
       .get(s"$baseUrl/customs-update-eori-admin-frontend/update")
+>>>>>>> main
       .check(status.is(200))
       .check(saveCsrfToken)
       .check(regex("Replace an existing EORI number").exists)
@@ -123,6 +203,50 @@ object EORIRequests extends ServicesConfiguration {
   }
 
 
+<<<<<<< HEAD
+  def getEnterCancelDetails: HttpRequestBuilder = {
+    http("get Enter details for Cancel")
+      .get(s"$baseUrl/customs-update-eori-admin-frontend/cancel")
+      .check(status.is(200))
+      .check(saveCsrfToken)
+      .check(regex("Cancel a company’s subscriptions to HMRC services").exists)
+  }
+
+  def postEnterCancelDetails: HttpRequestBuilder = {
+    http("post Enter details for Cancel")
+      .post(s"$baseUrl/customs-update-eori-admin-frontend/cancel")
+      .formParam("csrfToken", "${csrfToken}")
+    .formParam("existing-eori", "${EORI}")
+      .formParam("date-of-establishment.day","${EDAY}")
+    .formParam("date-of-establishment.month","${EMONTH}")
+    .formParam("date-of-establishment.year","${EYEAR}")
+      .check(status.is(303))
+      .check(header(Location).is("/customs-update-eori-admin-frontend/confirm-cancel?existingEori=${EORI}&establishmentDate=${EDAY}%2F${EMONTH}%2F${EYEAR}"))
+  }
+  def getConfirmCancel: HttpRequestBuilder = {
+    http("get Confirm for Cancel")
+      .get(s"$baseUrl/customs-update-eori-admin-frontend/confirm-cancel?existingEori=$${EORI}&establishmentDate=$${EDAY}%2F$${EMONTH}%2F$${EYEAR}")
+      .check(status.is(200))
+      .check(saveCsrfToken)
+      .check(regex("Are you sure you want to cancel ${EORI}").exists)
+  }
+
+  def postConfirmCancel: HttpRequestBuilder = {
+    http("post Confirm for Cancel")
+      .post(s"$baseUrl/customs-update-eori-admin-frontend/confirm-cancel?existingEori=$${EORI}&establishmentDate=$${EDAY}%2F$${EMONTH}%2F$${EYEAR}")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("confirm","true")
+      .check(status.is(303))
+      .check(header(Location).is("/customs-update-eori-admin-frontend/cancel"))
+  }
+  def getCancelConfirmValidation: HttpRequestBuilder = {
+    http("get Confirm for Cancel")
+      .get(s"$baseUrl/customs-update-eori-admin-frontend/success?cancelOrUpdate=Cancel-Eori&oldEoriNumber=$${EORI}&cancelledEnrolments=HMRC-ATAR-ORG%2CHMRC-GVMS-ORG")
+      .check(status.is(200))
+      .check(saveCsrfToken)
+      .check(regex("Subscriptions cancelled for ${EORI}").exists)
+  }
+=======
 
 
 
@@ -167,4 +291,5 @@ object EORIRequests extends ServicesConfiguration {
 //      //.check(header(Location).is("/customs-exports-internal/choice"))
 //      .check((header(Location)).is("/customs-update-eori-admin-frontend"))
 //  }
+>>>>>>> main
 }
