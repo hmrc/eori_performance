@@ -17,7 +17,15 @@
 package uk.gov.hmrc.perftests.example
 
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
+<<<<<<< HEAD
 import uk.gov.hmrc.perftests.example.EORIRequests.{getConfirmCancel, _}
+=======
+<<<<<<< HEAD
+import uk.gov.hmrc.perftests.example.EORIRequests.{getConfirmCancel, _}
+=======
+import uk.gov.hmrc.perftests.example.EORIRequests._
+>>>>>>> main
+>>>>>>> main
 
 class EORISimulation extends PerformanceTestRunner {
   //Internal service
@@ -29,6 +37,11 @@ class EORISimulation extends PerformanceTestRunner {
     getStrideAuthResponseRedirect,
     postSAMLResponseToStrideLogin
   )
+<<<<<<< HEAD
+  //Update service
+  setup("Update Journey", "Update EORI Journey steps") withActions(
+=======
+<<<<<<< HEAD
   //Update service
   setup("Update Journey", "Update EORI Journey steps") withActions(
 
@@ -50,5 +63,42 @@ class EORISimulation extends PerformanceTestRunner {
     postConfirmCancel,
     getCancelConfirmValidation
   )
+
+=======
+  //Internal service
+  setup("Update Journey", "Update EORI Journey") withActions(
+>>>>>>> main
+
+    getSelectUpdateOption,
+    postSelectUpdateOption,
+    getEnterUpdatDetails,
+    postEnterUpdatDetails,
+    getConfirmUpdate,
+    postConfirmUpdate
+  )
+  //Cancel service
+  setup("Cancel Journey", "Cancel EORI Journey steps") withActions(
+
+    getSelectCancelOption,
+    postSelectCancelOption,
+    getEnterCancelDetails,
+    postEnterCancelDetails,
+    getConfirmCancel,
+    postConfirmCancel,
+    getCancelConfirmValidation
+  )
+<<<<<<< HEAD
+=======
+  //Internal service
+//  setup("Cancel Journey", "Cancel EORI Journey") withActions(
+//    redirectWithoutStrideSession,
+//    getStrideLoginRedirect,
+//    getStrideIdpStubPage,
+//    postStrideLogin,
+//    getStrideAuthResponseRedirect,
+//    postCancelJourney
+//  )
+>>>>>>> main
+>>>>>>> main
   runSimulation()
 }
